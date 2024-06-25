@@ -1,20 +1,14 @@
-package com.constructordi;
+package com.autowiredi;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Main {
     public static void main(String[] args) {
-
         ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
 
-        BeanA beanA = context.getBean(BeanA.class);
+        Fattura fattura = context.getBean("fattura", Fattura.class);
 
-        System.out.println(beanA.hello());
-        System.out.println(beanA.getMatino());
-
-        BeanB beanB = context.getBean(BeanB.class);
-
-        System.out.println(beanB.hello());
+        System.out.println(fattura.stampaFattura());
     }
 }
