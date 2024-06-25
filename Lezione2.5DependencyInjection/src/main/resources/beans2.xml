@@ -8,10 +8,7 @@
 
     <bean id="prodottoService" class="com.constructordi.Prodotto" />
 
-    <bean id="fattura" class="com.constructordi.Fattura">
-<!--        <constructor-arg ref="ordine"/>-->
-<!--        <constructor-arg ref="prodotto"/>-->
-        <property name="ordine" ref="ordineService"/>
-        <property name="prodotto" ref="prodottoService"/>
+    <bean id="fattura" class="com.constructordi.Fattura" autowire="byName">
+
     </bean>
 </beans>
