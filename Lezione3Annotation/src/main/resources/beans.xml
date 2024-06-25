@@ -8,9 +8,11 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="com.constructordi">
+    <context:component-scan base-package="com.constructordi" />
 
-    </context:component-scan>
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="location" value="config.properties" />
+    </bean>
 
-
+    <context:component-scan base-package="com.constructordi" />
 </beans>

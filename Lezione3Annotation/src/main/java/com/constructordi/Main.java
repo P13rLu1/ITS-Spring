@@ -11,10 +11,13 @@ public class Main {
         BeanA beanA = context.getBean(BeanA.class);
 
         System.out.println(beanA.hello());
+        System.out.println(beanA.getMatino());
 
         BeanB beanB = context.getBean(BeanB.class);
 
         System.out.println(beanB.hello());
+
+
 
     }
 }
