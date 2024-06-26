@@ -99,7 +99,7 @@ Distribuito sotto la licenza MIT. Vedi [LICENSE](LICENSE) per maggiori informazi
 
 ## Contatti
 
-- **Autore**: Pierluigi Lurati
+- **Autore**: Pier
 - **Email**: [pierluigi.lurati@example.com](mailto:pierluigi.lurati@example.com)
 
 ---
