@@ -29,6 +29,7 @@ public class PersonaServiceImpl implements PersonaService {
         }
     }
 
+    // metodo per scrivere la lista di persone in un file json
     private void writePersona(List<PersonaEntity> persone) throws IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
@@ -36,6 +37,7 @@ public class PersonaServiceImpl implements PersonaService {
         }
     }
 
+    // metodo per leggere il file json e ritornare la lista di persone
     @Override
     public List<PersonaEntity> getListaPersone() {
         File file = new File(FILE_NAME);
@@ -51,6 +53,7 @@ public class PersonaServiceImpl implements PersonaService {
         }
     }
 
+    // metodo per eliminare una persona dalla lista
     @Override
     public void deletePersona(int id) {
         List<PersonaEntity> persone = getListaPersone();
@@ -66,6 +69,7 @@ public class PersonaServiceImpl implements PersonaService {
         }
     }
 
+    // metodo per ritornare una persona dalla lista
     @Override
     public PersonaEntity getPersonaById(int id) {
         List<PersonaEntity> persone = getListaPersone();
