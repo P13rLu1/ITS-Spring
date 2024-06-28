@@ -1,10 +1,12 @@
 package com.apiexample.lezione4api.service.impl;
 
 import com.apiexample.lezione4api.entity.PersonaEntity;
+import com.apiexample.lezione4api.entity.repository.PersonaRepository;
 import com.apiexample.lezione4api.service.PersonaService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -17,6 +19,10 @@ import static com.apiexample.lezione4api.utils.Constants.OBJECT_MAPPER;
 @Service
 public class PersonaServiceImpl implements PersonaService {
 
+
+    @Autowired
+    private PersonaRepository personaRepository;
+
     // metodo che prenda la persona e lo mette in una lista che poi andrá messa in un file json
     @Override
     public void addPersona(PersonaEntity persona) {
@@ -26,6 +32,15 @@ public class PersonaServiceImpl implements PersonaService {
             writePersona(persone);
         } catch (IOException e) {
             throw new RuntimeException("Errore nella scrittura del file");
+        }
+    }
+
+    @Override
+    public PersonaEntity addPersonaDB(PersonaEntity persona) {
+        try {
+            return personaRepository.save(persona);
+        } catch (Exception e) {
+            throw new RuntimeException("Errore nell'aggiunta della persona");
         }
     }
 
@@ -53,6 +68,11 @@ public class PersonaServiceImpl implements PersonaService {
         }
     }
 
+    @Override
+    public List<PersonaEntity> getListaPersoneDB() {
+        return personaRepository.findAll();
+    }
+
     // metodo per eliminare una persona dalla lista
     @Override
     public void deletePersona(int id) {
@@ -69,6 +89,15 @@ public class PersonaServiceImpl implements PersonaService {
         }
     }
 
+    @Override
+    public void deletePersonaDB(int id) {
+        try {
+            personaRepository.deleteById((long) id);
+        } catch (Exception e) {
+            throw new RuntimeException("Errore nell'eliminazione della persona");
+        }
+    }
+
     // metodo per ritornare una persona dalla lista
     @Override
     public PersonaEntity getPersonaById(int id) {
@@ -77,6 +106,15 @@ public class PersonaServiceImpl implements PersonaService {
             return persone.get(id - 1);
         } else {
             throw new RuntimeException("Index fuori dai limiti");
+        }
+    }
+
+    @Override
+    public PersonaEntity getPersonaByIdDB(int id) {
+        try {
+            return personaRepository.findById((long) id).orElse(null);//findById(id).orElse(null);
+        } catch (Exception e) {
+            throw new RuntimeException("Errore nel recupero della persona");
         }
     }
 }

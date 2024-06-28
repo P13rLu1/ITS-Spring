@@ -20,9 +20,9 @@ public class PersonaController {
         // chiamata al servizio per aggiungere una persona
         try {
             personaService.addPersona(persona);
-            return ResponseEntity.ok("Persona aggiunta correttamente");
+            return new ResponseEntity<>(personaService.addPersonaDB(persona), HttpStatus.OK);
         } catch (Exception e) {
-            throw new RuntimeException("Errore nell'aggiunta della persona");
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -31,7 +31,7 @@ public class PersonaController {
     ResponseEntity<?> getLista() {
 
         try {
-            return new ResponseEntity<>(personaService.getListaPersone(), HttpStatus.OK);
+            return new ResponseEntity<>(personaService.getListaPersoneDB(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -43,6 +43,7 @@ public class PersonaController {
     ResponseEntity<?> deletePersona(@RequestParam(value = "id") int id) {
         try {
             personaService.deletePersona(id);
+            personaService.deletePersonaDB(id);
             return ResponseEntity.ok("Persona eliminata correttamente");
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -53,7 +54,7 @@ public class PersonaController {
     @GetMapping("/getPersona")
     ResponseEntity<?> getPersona(@RequestParam(value = "id") int id) {
         try {
-            return new ResponseEntity<>(personaService.getPersonaById(id), HttpStatus.OK);
+            return new ResponseEntity<>(personaService.getPersonaByIdDB(id), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

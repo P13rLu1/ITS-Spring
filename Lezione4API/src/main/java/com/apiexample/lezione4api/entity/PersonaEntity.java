@@ -1,11 +1,19 @@
 package com.apiexample.lezione4api.entity;
 
+import jakarta.persistence.*;
+
 import java.io.Serial;
 import java.io.Serializable;
 
+@Entity
 public class PersonaEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 5315219480580631678L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
     private String nome;
     private String cognome;
     private String email;
