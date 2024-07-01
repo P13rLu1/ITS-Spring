@@ -1,0 +1,4 @@
+Persona{nome='Luca', cognome='Bianchi', eta=17}
+Persona{nome='Paolo', cognome='Verdi', eta=30}
+Persona{nome='Giuseppe', cognome='Gialli', eta=15}
+Persona{nome='Giovanni', cognome='Neri', eta=20}
