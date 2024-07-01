@@ -12,7 +12,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         PersonaServiceImpl personaService = new PersonaServiceImpl();
         ImpiegatoServiceImpl impiegatoService = new ImpiegatoServiceImpl();
@@ -77,10 +77,7 @@ public class Main {
         long numeroImpiegatiPerEta = impiegatoService.countImpiegatiPerEta(25);
         System.out.println("\nNumero di impiegati con età 25: " + numeroImpiegatiPerEta);
 
-        int maxEta = impiegati.stream()
-                .mapToInt(Impiegato::getEta)
-                .max()
-                .orElseThrow();
+        int maxEta = impiegatoService.calcoloMaxEta();
         System.out.println("\nEtà massima: " + maxEta);
 
         System.out.println("\nImpiegati ordinati per cognome:");
@@ -89,7 +86,11 @@ public class Main {
                 .forEach(System.out::println);
 
         try {
-            List<String> errori = Files.lines(Paths.get("errori.txt")).filter(l -> l.startsWith("ERROR")).limit(7).toList();
+            @SuppressWarnings("resource")
+            List<String> errori = Files.lines(Paths.get("errori.txt"))
+                    .filter(l -> l.startsWith("ERROR"))
+                    .limit(7)
+                    .toList();
             errori.forEach(System.out::println);
         } catch (IOException e) {
             throw new RuntimeException(e);

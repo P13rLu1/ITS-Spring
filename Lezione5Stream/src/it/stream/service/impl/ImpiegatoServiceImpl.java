@@ -36,4 +36,8 @@ public class ImpiegatoServiceImpl {
     public long countImpiegatiPerEta(int eta) {
         return impiegati.stream().filter(i -> i.getEta() == eta).count();
     }
+
+    public int calcoloMaxEta() {
+        return impiegati.stream().mapToInt(Impiegato::getEta).max().orElse(0);
+    }
 }
