@@ -40,7 +40,7 @@ public class PersonaServiceImpl implements PersonaService {
         try {
             return personaRepository.save(persona);
         } catch (Exception e) {
-            throw new RuntimeException("Errore nell'aggiunta della persona");
+            throw new RuntimeException(e);
         }
     }
 
@@ -94,7 +94,7 @@ public class PersonaServiceImpl implements PersonaService {
         try {
             personaRepository.deleteById((long) id);
         } catch (Exception e) {
-            throw new RuntimeException("Errore nell'eliminazione della persona");
+            throw new RuntimeException(e);
         }
     }
 
@@ -114,7 +114,7 @@ public class PersonaServiceImpl implements PersonaService {
         try {
             return personaRepository.findById((long) id).orElse(null);//findById(id).orElse(null);
         } catch (Exception e) {
-            throw new RuntimeException("Errore nel recupero della persona");
+            throw new RuntimeException(e);
         }
     }
 }
