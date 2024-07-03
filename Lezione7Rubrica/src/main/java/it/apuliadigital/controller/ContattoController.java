@@ -58,7 +58,8 @@ public class ContattoController {
     ResponseEntity<?> updateContact(@PathVariable String id, @RequestBody ContattoEntity contatto) {
         try {
             contatto.setId(id);
-            return new ResponseEntity<>(contattoService.aggiungiContatto(contatto), HttpStatus.OK);
+            contattoService.aggiungiContatto(contatto);
+            return ResponseEntity.ok("Contatto modificato correttamente");
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
