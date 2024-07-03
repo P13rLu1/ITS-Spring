@@ -46,7 +46,7 @@ public class LogServiceImpl implements LogService {
         }
 
         timestamp = getTimestamp();
-        LogEntity log = new LogEntity("/getRomano", "Fatta Conversione In Numero Romano", timestamp);
+        LogEntity log = new LogEntity("/getRomano", "Fatta Conversione In Numero Romano = " + romano, timestamp);
         addLog(log);
 
         return romano.toString();
@@ -65,7 +65,7 @@ public class LogServiceImpl implements LogService {
         }
 
         timestamp = getTimestamp();
-        LogEntity log = new LogEntity("/getDecimaleRomano", "Fatta Conversione In Numero Decimale Da Numero Romano", timestamp);
+        LogEntity log = new LogEntity("/getDecimaleRomano", "Fatta Conversione In Numero Decimale Da Numero Romano = " + decimale, timestamp);
         addLog(log);
 
         return decimale;
@@ -77,7 +77,7 @@ public class LogServiceImpl implements LogService {
         String binario = Integer.toBinaryString(numero);
 
         timestamp = getTimestamp();
-        LogEntity log = new LogEntity("/getBinario", "Fatta Conversione In Numero Binario", timestamp);
+        LogEntity log = new LogEntity("/getBinario", "Fatta Conversione In Numero Binario = " + binario, timestamp);
         addLog(log);
 
         return binario;
@@ -89,7 +89,7 @@ public class LogServiceImpl implements LogService {
         int decimale = Integer.parseInt(binario, 2);
 
         timestamp = getTimestamp();
-        LogEntity log = new LogEntity("/getDecimaleBinario", "Fatta Conversione In Numero Decimale Da Numero Binario", timestamp);
+        LogEntity log = new LogEntity("/getDecimaleBinario", "Fatta Conversione In Numero Decimale Da Numero Binario = " + decimale, timestamp);
         addLog(log);
 
         return decimale;
@@ -101,7 +101,7 @@ public class LogServiceImpl implements LogService {
         String esadecimale = Integer.toHexString(numero);
 
         timestamp = getTimestamp();
-        LogEntity log = new LogEntity("/getEsadecimale", "Fatta Conversione In Numero Esadecimale", timestamp);
+        LogEntity log = new LogEntity("/getEsadecimale", "Fatta Conversione In Numero Esadecimale = " + esadecimale, timestamp);
         addLog(log);
 
         return esadecimale;
@@ -113,7 +113,7 @@ public class LogServiceImpl implements LogService {
         int decimale = Integer.parseInt(esadecimale, 16);
 
         timestamp = getTimestamp();
-        LogEntity log = new LogEntity("/getDecimaleEsadecimale", "Fatta Conversione In Numero Decimale Da Numero Esadecimale", timestamp);
+        LogEntity log = new LogEntity("/getDecimaleEsadecimale", "Fatta Conversione In Numero Decimale Da Numero Esadecimale = " + decimale, timestamp);
         addLog(log);
 
         return decimale;
