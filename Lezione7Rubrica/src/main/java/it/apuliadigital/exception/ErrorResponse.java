@@ -49,10 +49,9 @@ public class ErrorResponse {
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (!(o instanceof ErrorResponse)) {
+        if (!(o instanceof ErrorResponse errorResponse)) {
             return false;
         }
-        ErrorResponse errorResponse = (ErrorResponse) o;
         return statusCode == errorResponse.statusCode && Objects.equals(message, errorResponse.message);
     }
 
