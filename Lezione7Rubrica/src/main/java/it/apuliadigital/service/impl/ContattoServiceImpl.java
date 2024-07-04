@@ -16,21 +16,19 @@ public class ContattoServiceImpl implements ContattoService {
 
     @Override
     public String aggiungiContatto(ContattoEntity contatto) {
-        try {
-            contattoRepository.save(contatto);
-            return contatto.getId();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        contattoRepository.save(contatto);
+        if (contatto.getId() == null) {
+            throw new RuntimeException("Errore durante l'aggiunta del contatto");
         }
+        return contatto.getId();
     }
 
     @Override
     public ContattoEntity getContattoById(String id) {
-        try {
-            return contattoRepository.findById(id).orElse(null);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if (contattoRepository.findById(id).isEmpty()) {
+            throw new RuntimeException("Contatto non trovato");
         }
+        return contattoRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -41,6 +39,10 @@ public class ContattoServiceImpl implements ContattoService {
     @Override
     public List<ContattoEntity> searchContatti(String nome, String cognome) {
         List<ContattoEntity> contatti = getContatti();
+        if (contatti.isEmpty()) {
+            throw new RuntimeException("Nessun contatto trovato");
+        }
+
         if (nome != null && cognome != null) {
             return contatti.stream().filter(contatto -> contatto.getNome().equalsIgnoreCase(nome) && contatto.getCognome().equalsIgnoreCase(cognome)).toList();
         } else if (nome != null) {
@@ -54,10 +56,9 @@ public class ContattoServiceImpl implements ContattoService {
 
     @Override
     public void eliminaContatto(String id) {
-        try {
-            contattoRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if (contattoRepository.findById(id).isEmpty()) {
+            throw new RuntimeException("Contatto non trovato");
         }
+        contattoRepository.deleteById(id);
     }
 }

@@ -16,63 +16,45 @@ public class ContattoController {
     // metodo per aggiungere un contatto
     @PostMapping("/contacts")
     ResponseEntity<?> addContact(@RequestBody ContattoEntity contatto) {
-        try {
-            return new ResponseEntity<>(contattoService.aggiungiContatto(contatto), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(contattoService.aggiungiContatto(contatto), HttpStatus.OK);
     }
 
     // metodo per ottenere un contatto
     @GetMapping("/contacts/{id}")
     ResponseEntity<?> getContact(@PathVariable String id) {
-        try {
-            return new ResponseEntity<>(contattoService.getContattoById(id), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(contattoService.getContattoById(id), HttpStatus.OK);
     }
 
     // metodo per ottenere una lista di contatti
     @GetMapping("/contacts")
     ResponseEntity<?> getContacts() {
-        try {
-            return new ResponseEntity<>(contattoService.getContatti(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(contattoService.getContatti(), HttpStatus.OK);
     }
 
     // metodo per cercare un contatto per nome e/o cognome
     @GetMapping("/contacts/search")
     ResponseEntity<?> searchContacts(@RequestParam(value = "nome", required = false) String nome, @RequestParam(value = "cognome", required = false) String cognome) {
-        try {
-            return new ResponseEntity<>(contattoService.searchContatti(nome, cognome), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(contattoService.searchContatti(nome, cognome), HttpStatus.OK);
     }
 
     // metodo per modificare un contatto
     @PutMapping("/contacts/{id}")
     ResponseEntity<?> updateContact(@PathVariable String id, @RequestBody ContattoEntity contatto) {
-        try {
-            contatto.setId(id);
-            contattoService.aggiungiContatto(contatto);
-            return ResponseEntity.ok("Contatto modificato correttamente 👍");
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        contatto.setId(id);
+        contattoService.aggiungiContatto(contatto);
+        return ResponseEntity.ok("Contatto modificato correttamente 👍");
     }
 
     // metodo per eliminare un contatto
     @DeleteMapping("/contacts/{id}")
     ResponseEntity<?> deleteContact(@PathVariable String id) {
-        try {
-            contattoService.eliminaContatto(id);
-            return ResponseEntity.ok("Contatto eliminato correttamente 👍");
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        contattoService.eliminaContatto(id);
+        return ResponseEntity.ok("Contatto eliminato correttamente 👍");
+    }
+
+    // metodo per gestire le eccezioni
+    @ExceptionHandler(RuntimeException.class)
+    ResponseEntity<?> handleException(RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }
