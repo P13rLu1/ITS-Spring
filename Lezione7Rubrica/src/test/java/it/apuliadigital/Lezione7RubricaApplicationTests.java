@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 @SpringBootTest
 class Lezione7RubricaApplicationTests {
 
@@ -29,12 +32,11 @@ class Lezione7RubricaApplicationTests {
 		String id = contattoService.aggiungiContatto(contatto);
 		ContattoEntity contattoSalvato = contattoService.getContattoById(id);
 
-		assert contattoSalvato != null;
-
-		assert contattoSalvato.getNome().equals(contatto.getNome());
-		assert contattoSalvato.getCognome().equals(contatto.getCognome());
-		assert contattoSalvato.getTelefono().equals(contatto.getTelefono());
-		assert contattoSalvato.getEmail().equals(contatto.getEmail());
+		assertEquals(contatto.getNome(), contattoSalvato.getNome());
+		assertEquals(contatto.getCognome(), contattoSalvato.getCognome());
+		assertEquals(contatto.getTelefono(), contattoSalvato.getTelefono());
+		assertEquals(contatto.getEmail(), contattoSalvato.getEmail());
+		assertNotEquals("", id);
 	}
 
 	@Test
@@ -48,10 +50,16 @@ class Lezione7RubricaApplicationTests {
 
 		contattoService.aggiungiContatto(contatto);
 
-		assert contattoService.searchContatti("Mario", "Rossi").size() == 1;
-		assert contattoService.searchContatti("Mario", null).size() == 1;
-		assert contattoService.searchContatti(null, "Rossi").size() == 1;
-		assert contattoService.searchContatti(null, null).size() == 1;
+		assertEquals(1, contattoService.searchContatti("Mario", "Rossi").size());
+		assertEquals(1, contattoService.searchContatti("Mario", null).size());
+		assertEquals(1, contattoService.searchContatti(null, "Rossi").size());
+		assertEquals(1, contattoService.searchContatti(null, null).size());
+
+		assertEquals(0, contattoService.searchContatti("Luigi", "Verdi").size());
+		assertEquals(0, contattoService.searchContatti("Luigi", null).size());
+		assertEquals(0, contattoService.searchContatti(null, "Verdi").size());
+
+		assertNotEquals(0, contattoService.searchContatti("Mario", "Rossi").size());
 	}
 
 	@Test
@@ -71,8 +79,12 @@ class Lezione7RubricaApplicationTests {
 
 		ContattoEntity contattoModificato = contattoService.getContattoById(id);
 
-		assert contattoModificato != null;
-		assert contattoModificato.getNome().equals("Luigi");
+		assertEquals("Luigi", contattoModificato.getNome());
+		assertEquals(contatto.getCognome(), contattoModificato.getCognome());
+		assertEquals(contatto.getTelefono(), contattoModificato.getTelefono());
+		assertEquals(contatto.getEmail(), contattoModificato.getEmail());
+
+		assertNotEquals(contatto.getNome(), contattoModificato.getNome());
 	}
 
 	@Test
@@ -88,7 +100,9 @@ class Lezione7RubricaApplicationTests {
 
 		contattoService.eliminaContatto(id);
 
-		assert contattoService.getContattoById(id) == null;
+		assertEquals(0, contattoService.searchContatti("Mario", "Rossi").size());
+
+		assertNotEquals(1, contattoService.searchContatti("Mario", "Rossi").size());
 	}
 
 	@Test
@@ -102,7 +116,7 @@ class Lezione7RubricaApplicationTests {
 
 		contattoService.aggiungiContatto(contatto);
 
-		assert !contattoService.getContatti().isEmpty();
+		assertNotEquals(0, contattoService.getContatti().size());
 	}
 
 	@Test
@@ -118,20 +132,28 @@ class Lezione7RubricaApplicationTests {
 
 		ContattoEntity contattoSalvato = contattoService.getContattoById(id);
 
-		assert contattoSalvato != null;
-
-		assert contattoSalvato.getNome().equals(contatto.getNome());
-		assert contattoSalvato.getCognome().equals(contatto.getCognome());
-		assert contattoSalvato.getTelefono().equals(contatto.getTelefono());
-		assert contattoSalvato.getEmail().equals(contatto.getEmail());
+		assertNotEquals(null, contattoSalvato);
+		assertEquals(id, contattoSalvato.getId());
+		assertEquals(contatto.getNome(), contattoSalvato.getNome());
+		assertEquals(contatto.getCognome(), contattoSalvato.getCognome());
+		assertEquals(contatto.getTelefono(), contattoSalvato.getTelefono());
+		assertEquals(contatto.getEmail(), contattoSalvato.getEmail());
 	}
 
 	@Test
 	@Order(7)
-	void testSearchContactsNotFound() {
-		assert contattoService.searchContatti("Mario", "Rossi").isEmpty();
-		assert contattoService.searchContatti("Mario", null).isEmpty();
-		assert contattoService.searchContatti(null, "Rossi").isEmpty();
-		assert contattoService.searchContatti(null, null).isEmpty();
+	void testDeleteAllContacts() {
+		contattoService.getContatti().forEach(contatto -> contattoService.eliminaContatto(contatto.getId()));
+
+		assertEquals(0, contattoService.getContatti().size());
+	}
+
+	@Test
+	@Order(8)
+	void testSearchContactsEmpty() {
+		assertEquals(0, contattoService.searchContatti("Mario", "Rossi").size());
+		assertEquals(0, contattoService.searchContatti("Mario", null).size());
+		assertEquals(0, contattoService.searchContatti(null, "Rossi").size());
+		assertEquals(0, contattoService.searchContatti(null, null).size());
 	}
 }

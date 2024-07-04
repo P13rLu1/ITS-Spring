@@ -59,7 +59,7 @@ public class ContattoController {
         try {
             contatto.setId(id);
             contattoService.aggiungiContatto(contatto);
-            return ResponseEntity.ok("Contatto modificato correttamente");
+            return ResponseEntity.ok("Contatto modificato correttamente 👍");
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -70,7 +70,7 @@ public class ContattoController {
     ResponseEntity<?> deleteContact(@PathVariable String id) {
         try {
             contattoService.eliminaContatto(id);
-            return ResponseEntity.ok("Contatto eliminato correttamente");
+            return ResponseEntity.ok("Contatto eliminato correttamente 👍");
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
