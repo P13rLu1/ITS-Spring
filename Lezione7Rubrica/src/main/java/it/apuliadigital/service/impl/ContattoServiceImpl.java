@@ -1,12 +1,14 @@
 package it.apuliadigital.service.impl;
 
 import it.apuliadigital.entity.ContattoEntity;
+import it.apuliadigital.exception.ContattoException;
 import it.apuliadigital.repository.ContattoRepository;
 import it.apuliadigital.service.ContattoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ContattoServiceImpl implements ContattoService {
@@ -17,30 +19,34 @@ public class ContattoServiceImpl implements ContattoService {
     @Override
     public String aggiungiContatto(ContattoEntity contatto) {
         contattoRepository.save(contatto);
-        if (contatto.getId() == null) {
-            throw new RuntimeException("Errore durante l'aggiunta del contatto");
-        }
         return contatto.getId();
     }
 
     @Override
     public ContattoEntity getContattoById(String id) {
-        if (contattoRepository.findById(id).isEmpty()) {
-            throw new RuntimeException("Contatto non trovato");
+        ContattoEntity contatto = contattoRepository.findById(id).orElse(null);
+        if (contatto == null) {
+            throw new ContattoException("Contatto non trovato");
+        } else {
+            return contatto;
         }
-        return contattoRepository.findById(id).orElse(null);
     }
 
     @Override
     public List<ContattoEntity> getContatti() {
-        return (List<ContattoEntity>) contattoRepository.findAll();
+        List<ContattoEntity> contatti = (List<ContattoEntity>) contattoRepository.findAll();
+        if (contatti.isEmpty()) {
+            throw new ContattoException("Nessun contatto trovato");
+        } else {
+            return contatti;
+        }
     }
 
     @Override
     public List<ContattoEntity> searchContatti(String nome, String cognome) {
         List<ContattoEntity> contatti = getContatti();
         if (contatti.isEmpty()) {
-            throw new RuntimeException("Nessun contatto trovato");
+            throw new ContattoException("Nessun contatto trovato");
         }
 
         if (nome != null && cognome != null) {
@@ -56,9 +62,12 @@ public class ContattoServiceImpl implements ContattoService {
 
     @Override
     public void eliminaContatto(String id) {
-        if (contattoRepository.findById(id).isEmpty()) {
-            throw new RuntimeException("Contatto non trovato");
+        Optional<ContattoEntity> contatto = contattoRepository.findById(id);
+
+        if (contatto.isPresent()) {
+            contattoRepository.deleteById(id);
+        } else {
+            throw new ContattoException("Contatto non trovato");
         }
-        contattoRepository.deleteById(id);
     }
 }

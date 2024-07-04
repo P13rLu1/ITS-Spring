@@ -1,6 +1,8 @@
 package it.apuliadigital.controller;
 
 import it.apuliadigital.entity.ContattoEntity;
+import it.apuliadigital.exception.ContattoException;
+import it.apuliadigital.exception.ErrorResponse;
 import it.apuliadigital.service.ContattoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +18,12 @@ public class ContattoController {
     // metodo per aggiungere un contatto
     @PostMapping("/contacts")
     ResponseEntity<?> addContact(@RequestBody ContattoEntity contatto) {
-        return new ResponseEntity<>(contattoService.aggiungiContatto(contatto), HttpStatus.OK);
+        String id = contattoService.aggiungiContatto(contatto);
+        if (Integer.parseInt(id) != 0) {
+            return new ResponseEntity<>(id, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>("Errore durante l'aggiunta del contatto", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // metodo per ottenere un contatto
@@ -53,8 +60,9 @@ public class ContattoController {
     }
 
     // metodo per gestire le eccezioni
-    @ExceptionHandler(RuntimeException.class)
-    ResponseEntity<?> handleException(RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    @ExceptionHandler(value = ContattoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleContactsNotFound(ContattoException e) {
+        return new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
     }
 }
