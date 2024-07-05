@@ -1,10 +1,12 @@
 package it.apuliadigital;
 
 import it.apuliadigital.entity.ContattoEntity;
+import it.apuliadigital.repository.ContattoRepository;
 import it.apuliadigital.service.ContattoService;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -12,161 +14,161 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class Lezione7RubricaApplicationTests {
 
-	@MockBean
-	private ContattoService contattoService;
+    @Autowired
+    private ContattoService contattoService;
+    @MockBean
+    private ContattoRepository contattoRepository;
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    @Order(1)
+    void testAddContact() {
+        // Create un nuovo contatto
+        ContattoEntity contatto = new ContattoEntity("Mario", "Rossi", "1234567890", "mail");
+        contatto.setId("1");
 
-	@Test
-	@Order(1)
-	void testAddContact() {
-		ContattoEntity contatto = new ContattoEntity();
-		contatto.setNome("Mario");
-		contatto.setCognome("Rossi");
-		contatto.setTelefono("1234567890");
-		contatto.setEmail("mail@example.com"); // Use a realistic email format
+        // Simula il salvataggio del contatto
+        when(contattoRepository.save(contatto)).thenReturn(contatto);
 
-		when(contattoService.aggiungiContatto(any(ContattoEntity.class))).thenReturn("1");
-		when(contattoService.getContattoById("1")).thenReturn(contatto);
+        // Aggiungi il contatto
+        String result = contattoService.aggiungiContatto(contatto);
 
-		String id = contattoService.aggiungiContatto(contatto);
-		ContattoEntity contattoSalvato = contattoService.getContattoById(id);
+        // Verifica che il contatto sia stato aggiunto correttamente
+        assertEquals(contatto.getId(), result, "Il Contatto dovrebbe essere aggiunto correttamente");
 
-		// Improved assertions
-		assertEquals(contatto.getNome(), contattoSalvato.getNome(), "Name should match");
-		assertEquals(contatto.getCognome(), contattoSalvato.getCognome(), "Surname should match");
-		assertEquals(contatto.getTelefono(), contattoSalvato.getTelefono(), "Phone should match");
-		assertEquals(contatto.getEmail(), contattoSalvato.getEmail(), "Email should match");
-		assertNotEquals("", id, "ID should not be empty");
+        // Verifica che il contatto sia stato salvato
+        verify(contattoRepository).save(contatto);
+    }
 
-		// Verify that the add method was called exactly once
-		Mockito.verify(contattoService, Mockito.times(1)).aggiungiContatto(any(ContattoEntity.class));
-	}
+    @Test
+    @Order(2)
+    void testGetContactById() {
+        // Create un nuovo contatto
+        ContattoEntity contatto = new ContattoEntity("Mario", "Rossi", "1234567890", "mail");
+        contatto.setId("1");
 
-	@Test
-	@Order(2)
-	void testSearchContacts() {
-		ContattoEntity contatto = new ContattoEntity();
-		contatto.setNome("Mario");
-		contatto.setCognome("Rossi");
-		contatto.setTelefono("1234567890");
-		contatto.setEmail("mail");
+        // Simula la ricerca del contatto
+        when(contattoRepository.findById("1")).thenReturn(java.util.Optional.of(contatto));
 
-		List<ContattoEntity> contattiList = Collections.singletonList(contatto);
+        // Ottieni il contatto
+        ContattoEntity result = contattoService.getContattoById("1");
 
-		when(contattoService.searchContatti("Mario", "Rossi")).thenReturn(contattiList);
-		when(contattoService.searchContatti("Mario", null)).thenReturn(contattiList);
-		when(contattoService.searchContatti(null, "Rossi")).thenReturn(contattiList);
-		when(contattoService.searchContatti(null, null)).thenReturn(contattiList);
+        // Verifica che il contatto sia stato trovato
+        assertNotNull(result, "Contact should be found");
 
-		assertEquals(1, contattoService.searchContatti("Mario", "Rossi").size());
-		assertEquals(1, contattoService.searchContatti("Mario", null).size());
-		assertEquals(1, contattoService.searchContatti(null, "Rossi").size());
-		assertEquals(1, contattoService.searchContatti(null, null).size());
+        // Verifica che il contatto sia stato trovato correttamente
+        assertEquals("Mario", result.getNome(), "Il contatto dovrebbe essere trovato correttamente");
+        assertEquals("Rossi", result.getCognome(), "Il contatto dovrebbe essere trovato correttamente");
+        assertEquals("1234567890", result.getTelefono(), "Il contatto dovrebbe essere trovato correttamente");
+        assertEquals("mail", result.getEmail(), "Il contatto dovrebbe essere trovato correttamente");
 
-		when(contattoService.searchContatti("Luigi", "Verdi")).thenReturn(Collections.emptyList());
-		when(contattoService.searchContatti("Luigi", null)).thenReturn(Collections.emptyList());
-		when(contattoService.searchContatti(null, "Verdi")).thenReturn(Collections.emptyList());
+        // Verifica che il contatto sia stato trovato
+        verify(contattoRepository).findById("1");
+    }
 
-		assertEquals(0, contattoService.searchContatti("Luigi", "Verdi").size());
-		assertEquals(0, contattoService.searchContatti("Luigi", null).size());
-		assertEquals(0, contattoService.searchContatti(null, "Verdi").size());
+    @Test
+    @Order(3)
+    void testGetContacts() {
+        // Create un nuovo contatto
+        ContattoEntity contatto = new ContattoEntity("Mario", "Rossi", "1234567890", "mail");
+        contatto.setId("1");
 
-		assertNotEquals(0, contattoService.searchContatti("Mario", "Rossi").size());
-	}
+        // Simula la ricerca dei contatti
+        when(contattoRepository.findAll()).thenReturn(Collections.singletonList(contatto));
 
-	@Test
-	@Order(3)
-	void testUpdateContact() {
-		ContattoEntity contatto = new ContattoEntity();
-		contatto.setNome("Mario");
-		contatto.setCognome("Rossi");
-		contatto.setTelefono("1234567890");
-		contatto.setEmail("mail@example.com");
+        // Ottieni i contatti
+        List<ContattoEntity> result = contattoService.getContatti();
 
-		ContattoEntity contattoAggiornato = new ContattoEntity();
-		contattoAggiornato.setId("1");
-		contattoAggiornato.setNome("Luigi");
-		contattoAggiornato.setCognome("Rossi");
-		contattoAggiornato.setTelefono("1234567890");
-		contattoAggiornato.setEmail("mail@example.com");
+        // Verifica che i contatti siano stati trovati
+        assertNotNull(result, "Contacts should be found");
 
-		when(contattoService.aggiungiContatto(any(ContattoEntity.class))).thenReturn("1");
-		when(contattoService.getContattoById("1")).thenReturn(contatto, contattoAggiornato);
+        // Verifica che i contatti siano stati trovati correttamente
+        assertEquals(1, result.size(), "I contatti dovrebbero essere trovati correttamente");
+        assertEquals("Mario", result.get(0).getNome(), "I contatti dovrebbero essere trovati correttamente");
+        assertEquals("Rossi", result.get(0).getCognome(), "I contatti dovrebbero essere trovati correttamente");
+        assertEquals("1234567890", result.get(0).getTelefono(), "I contatti dovrebbero essere trovati correttamente");
+        assertEquals("mail", result.get(0).getEmail(), "I contatti dovrebbero essere trovati correttamente");
 
-		String id = contattoService.aggiungiContatto(contatto);
+        // Verifica che i contatti siano stati trovati
+        verify(contattoRepository).findAll();
+    }
 
-		ContattoEntity contattoSalvato = contattoService.getContattoById(id);
-		contattoSalvato.setNome("Luigi");
-		contattoService.aggiungiContatto(contattoSalvato);
+    @Test
+    @Order(4)
+    void testSearchContacts() {
+        // Create un nuovo contatto
+        ContattoEntity contatto = new ContattoEntity("Mario", "Rossi", "1234567890", "mail");
+        contatto.setId("1");
 
-		ContattoEntity contattoModificato = contattoService.getContattoById(id);
+        // Simula la ricerca dei contatti
+        when(contattoRepository.searchByNomeAndCognome("Mario", "Rossi")).thenReturn(Collections.singletonList(contatto));
 
-		// Improved assertions
-		assertEquals("Luigi", contattoModificato.getNome(), "Name should be updated");
-		assertEquals(contatto.getCognome(), contattoModificato.getCognome(), "Surname should not change");
-		assertEquals(contatto.getTelefono(), contattoModificato.getTelefono(), "Phone should not change");
-		assertEquals(contatto.getEmail(), contattoModificato.getEmail(), "Email should not change");
+        // Cerca i contatti
+        List<ContattoEntity> result = contattoService.searchContatti("Mario", "Rossi");
 
-		// Verify the update interaction
-		Mockito.verify(contattoService, Mockito.times(2)).aggiungiContatto(any(ContattoEntity.class));
-	}
+        // Verifica che i contatti siano stati trovati
+        assertNotNull(result, "Contacts should be found");
 
-	@Test
-	@Order(4)
-	void testDeleteContact() {
-		ContattoEntity contatto = new ContattoEntity();
-		contatto.setNome("Mario");
-		contatto.setCognome("Rossi");
-		contatto.setTelefono("1234567890");
-		contatto.setEmail("mail@example.com");
+        // Verifica che i contatti siano stati trovati correttamente
+        assertEquals(1, result.size(), "I contatti dovrebbero essere trovati correttamente");
+        assertEquals("Mario", result.get(0).getNome(), "I contatti dovrebbero essere trovati correttamente");
+        assertEquals("Rossi", result.get(0).getCognome(), "I contatti dovrebbero essere trovati correttamente");
+        assertEquals("1234567890", result.get(0).getTelefono(), "I contatti dovrebbero essere trovati correttamente");
+        assertEquals("mail", result.get(0).getEmail(), "I contatti dovrebbero essere trovati correttamente");
 
-		when(contattoService.aggiungiContatto(any(ContattoEntity.class))).thenReturn("1");
-		when(contattoService.searchContatti("Mario", "Rossi")).thenReturn(Collections.emptyList());
+        // Verifica che i contatti siano stati trovati
+        verify(contattoRepository).searchByNomeAndCognome("Mario", "Rossi");
+    }
 
-		String id = contattoService.aggiungiContatto(contatto);
-		contattoService.eliminaContatto(id);
+    @Test
+    @Order(5)
+    void testUpdateContact() {
+        // Create un nuovo contatto
+        ContattoEntity contatto = new ContattoEntity("Mario", "Rotti", "1234567890", "mail");
+        contatto.setId("1");
 
-		// Improved assertions
-		assertEquals(0, contattoService.searchContatti("Mario", "Rossi").size(), "Contact should be deleted");
-		assertTrue(contattoService.searchContatti("Mario", "Rossi").isEmpty(), "Search result should be empty");
+        // Simula il salvataggio del contatto
+        when(contattoRepository.save(contatto)).thenReturn(contatto);
 
-		// Verify delete interaction
-		Mockito.verify(contattoService, Mockito.times(1)).eliminaContatto(id);
-	}
+        // Aggiorna il contatto
+        contattoService.aggiungiContatto(contatto);
 
+        // Verifica che il contatto sia stato aggiornato correttamente
+        verify(contattoRepository).save(contatto);
+    }
 
-	@Test
-	@Order(5)
-	void testGetContacts() {
-		ContattoEntity contatto = new ContattoEntity();
-		contatto.setNome("Mario");
-		contatto.setCognome("Rossi");
-		contatto.setTelefono("1234567890");
-		contatto.setEmail("mail");
+    @Test
+    @Order(6)
+    void testDeleteContact() {
+        // Create un nuovo contatto
+        ContattoEntity contatto = new ContattoEntity("Mario", "Rotti", "1234567890", "mail");
+        contatto.setId("1");
 
-		List<ContattoEntity> contattiList = Collections.singletonList(contatto);
+        // Simula la ricerca del contatto
+        when(contattoRepository.findById("1")).thenReturn(java.util.Optional.of(contatto));
 
-		when(contattoService.getContatti()).thenReturn(contattiList);
+        // Elimina il contatto
+        contattoService.eliminaContatto("1");
 
-		assertNotEquals(0, contattoService.getContatti().size());
-	}
+        // Verifica che il contatto sia stato eliminato correttamente
+        verify(contattoRepository).deleteById("1");
+    }
 
-	@Test
-	@Order(6)
-	void testDeleteAllContacts() {
-		when(contattoService.getContatti()).thenReturn(Collections.emptyList());
+    @Test
+    @Order(7)
+    void testDeleteContactNotFound() {
+        // Simula la ricerca del contatto
+        when(contattoRepository.findById("1")).thenReturn(java.util.Optional.empty());
 
-		contattoService.getContatti().forEach(contatto -> contattoService.eliminaContatto(contatto.getId()));
+        // Elimina il contatto
+        assertThrows(Exception.class, () -> contattoService.eliminaContatto("1"), "Il contatto non dovrebbe essere trovato");
 
-		assertEquals(0, contattoService.getContatti().size());
-	}
+        // Verifica che il contatto non sia stato trovato
+        verify(contattoRepository).findById("1");
+    }
 }

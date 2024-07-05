@@ -44,19 +44,14 @@ public class ContattoServiceImpl implements ContattoService {
 
     @Override
     public List<ContattoEntity> searchContatti(String nome, String cognome) {
-        List<ContattoEntity> contatti = getContatti();
-        if (contatti.isEmpty()) {
-            throw new ContattoException("Nessun contatto trovato");
-        }
-
         if (nome != null && cognome != null) {
-            return contatti.stream().filter(contatto -> contatto.getNome().equalsIgnoreCase(nome) && contatto.getCognome().equalsIgnoreCase(cognome)).toList();
+            return contattoRepository.searchByNomeAndCognome(nome, cognome);
         } else if (nome != null) {
-            return contatti.stream().filter(contatto -> contatto.getNome().equalsIgnoreCase(nome)).toList();
+            return contattoRepository.searchByNome(nome);
         } else if (cognome != null) {
-            return contatti.stream().filter(contatto -> contatto.getCognome().equalsIgnoreCase(cognome)).toList();
+            return contattoRepository.searchByCognome(cognome);
         } else {
-            return contatti;
+            return getContatti();
         }
     }
 
