@@ -1,4 +1,4 @@
-package dev.buttazzopierluigi.battletohero.testservice;
+package dev.buttazzopierluigi.battletohero.servicetest;
 
 import dev.buttazzopierluigi.battletohero.entity.HeroEntity;
 import dev.buttazzopierluigi.battletohero.entity.RaceEnum;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class TestHeroService {
+public class HeroServiceTest {
 
     @Autowired
     private HeroService heroService;

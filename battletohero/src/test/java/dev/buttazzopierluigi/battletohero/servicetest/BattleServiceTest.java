@@ -1,4 +1,4 @@
-package dev.buttazzopierluigi.battletohero.testservice;
+package dev.buttazzopierluigi.battletohero.servicetest;
 
 import dev.buttazzopierluigi.battletohero.service.BattleService;
 import org.junit.jupiter.api.Order;
@@ -12,7 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class TestBattleService {
+public class BattleServiceTest {
 
     @MockBean
     private BattleService battleService;
