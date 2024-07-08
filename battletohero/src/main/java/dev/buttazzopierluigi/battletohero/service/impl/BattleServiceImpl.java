@@ -49,10 +49,7 @@ public class BattleServiceImpl implements BattleService {
 
     // funzione per aggiungere la battaglia appena simulata alla storia (DB)
     private void addToHistory(int heroId1, int heroId2, int winner) {
-        BattleEntity battle = new BattleEntity();
-        battle.setHeroId(heroId1);
-        battle.setHero2Id(heroId2);
-        battle.setWinnerId(winner);
+        BattleEntity battle = new BattleEntity(heroId1, heroId2, winner);
         battleRepository.save(battle);
     }
 }

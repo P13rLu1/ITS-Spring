@@ -16,7 +16,7 @@ public class BattleController {
 
     // controller per simulare una battaglia
     @GetMapping("/battle")
-    ResponseEntity<?> startBattle(@RequestParam (value = "heroe1") int heroe1, @RequestParam (value = "heroe2") int heroe2, @RequestParam (value = "difficulty") double difficulty){
+    ResponseEntity<?> startBattle(@RequestParam (value = "heroe1") int heroe1, @RequestParam (value = "heroe2") int heroe2, @RequestParam (value = "logic") double difficulty){
         return new ResponseEntity<>(battleService.startBattle(heroe1, heroe2, difficulty), org.springframework.http.HttpStatus.OK);
     }
 }
