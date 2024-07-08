@@ -20,7 +20,7 @@ public class HeroController {
     ResponseEntity<?> addHero(@RequestBody HeroEntity hero) {
         int id = heroService.addHero(hero);
         if (id != 0) {
-            return new ResponseEntity<>("id: " +id, HttpStatus.CREATED);
+            return new ResponseEntity<>("id: " + id, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("Errore durante l'aggiunta dell'eroe", HttpStatus.INTERNAL_SERVER_ERROR);
         }

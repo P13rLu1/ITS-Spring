@@ -105,7 +105,7 @@ public class HeroServiceTest {
         when(heroRepository.save(hero)).thenReturn(hero);
 
         // Aggiorna l'eroe
-        heroService.updateHero(hero,1);
+        heroService.updateHero(hero, 1);
 
         // Verifica che il metodo sia stato chiamato
         verify(heroRepository).findById(1);

@@ -1,4 +1,5 @@
 package dev.buttazzopierluigi.battletohero.exception;
+
 import java.util.Objects;
 
 public class ErrorResponse {
