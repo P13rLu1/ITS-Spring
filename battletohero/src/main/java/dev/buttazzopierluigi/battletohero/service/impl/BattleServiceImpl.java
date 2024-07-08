@@ -19,27 +19,18 @@ public class BattleServiceImpl implements BattleService {
 
     @Override
     public int startBattle(int heroId, int heroId2, double difficulty) {
-        HeroEntity hero = heroRepository.findById(heroId).orElse(null);
+        HeroEntity hero1 = heroRepository.findById(heroId).orElse(null);
         HeroEntity hero2 = heroRepository.findById(heroId2).orElse(null);
 
-        if (hero == null || hero2 == null) {
+        if (hero1 == null || hero2 == null) {
             throw new HeroException("Eroe non trovato");
         }
 
-        int hero1Health = hero.getHealth();
-        int hero2Health = hero2.getHealth();
-        int hero1Level = hero.getLevel();
-        int hero2Level = hero2.getLevel();
-        int hero1Strength = hero.getStrength();
-        int hero2Strength = hero2.getStrength();
-        int hero1Defense = hero.getDefense();
-        int hero2Defense = hero2.getDefense();
-
         // formula per il calcolo del danno inflitto che tiene conto della forza, della difesa e del livello dei due eroi
-        double hero1Damage = hero1Strength * (1 - (double) hero2Defense / 100) * (1 + (double) hero1Level / 10) * difficulty;
-        double hero2Damage = hero2Strength * (1 - (double) hero1Defense / 100) * (1 + (double) hero2Level / 10) * difficulty;
+        double hero1Damage = hero1.getStrength() * (1 - (double) hero2.getDefense() / 100) * (1 + (double) hero1.getLevel() / 10) * difficulty;
+        double hero2Damage = hero2.getStrength() * (1 - (double) hero1.getDefense() / 100) * (1 + (double) hero2.getLevel() / 10) * difficulty;
 
-        return simulateBattle(heroId, heroId2, hero1Health, hero2Health, hero1Damage, hero2Damage);
+        return simulateBattle(heroId, heroId2, hero1.getHealth(), hero2.getHealth(), hero1Damage, hero2Damage);
     }
 
     // funzione per simulare la battaglia tra due eroi
