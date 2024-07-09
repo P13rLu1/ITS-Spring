@@ -100,7 +100,7 @@ Distribuito sotto la licenza MIT. Vedi [LICENSE](LICENSE) per maggiori informazi
 ## Contatti
 
 - **Autore**: Pier
-- **Email**: [pierluigi.lurati@example.com](mailto:pierluigi.lurati@example.com)
+- **Email**: [pbuttazzo@studenti.apuliadigitalmaker.it](mailto:pbuttazzo@studenti.apuliadigitalmaker.it)
 
 ---
 
